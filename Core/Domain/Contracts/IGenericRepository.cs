@@ -9,7 +9,7 @@ namespace Domain.Contracts
 {
     public interface IGenericRepository<TEntity,Tkey> where TEntity : BaseEntity<Tkey>
     {
-        Task<IEnumerable<TEntity>> GetAllAsync(bool asNoTracking);
+        Task<IEnumerable<TEntity>> GetAllAsync(bool asNoTracking = false);
         Task<TEntity?> GetByIdAsync(Tkey id);
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
