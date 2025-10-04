@@ -8,24 +8,24 @@ namespace Services.Specifications
 {
     internal class ProductWithBrandAndTypeSpecifications : Specifications<Product>
     {
-        public ProductWithBrandAndTypeSpecifications(string? sort , int? brandId, int? typeId) : 
+        public ProductWithBrandAndTypeSpecifications(ProductParametersSpecifications parameters) : 
             base(product =>
-            (!brandId.HasValue || product.BrandId == brandId.Value) &&
-            (!typeId.HasValue || product.TypeId == typeId.Value))
+            (!parameters.BrandId.HasValue || product.BrandId == parameters.BrandId.Value) &&
+            (!parameters.TypeId.HasValue || product.TypeId == parameters.TypeId.Value))
         {
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
-            if (!string.IsNullOrWhiteSpace(sort))
+            if (parameters.Sort is not null)
             {
-                switch (sort.ToLower().Trim())
+                switch (parameters.Sort)
                 {
-                    case "priceasc":
+                    case ProductSort.PriceAsc:
                         AddOrderBy(p => p.Price);
                         break;
-                    case "pricedesc":
+                    case ProductSort.PriceDesc:
                         AddOrderByDescending(p => p.Price);
                         break;
-                    case "namedesc":
+                    case ProductSort.NameDesc:
                         AddOrderByDescending(p => p.Name);
                         break;
                     default:
@@ -33,7 +33,7 @@ namespace Services.Specifications
                         break;
                 }
             }
-
+            ApplyPagination(parameters.PageIndex, parameters.PageSize);
         }
         public ProductWithBrandAndTypeSpecifications(int id) : base(p => p.Id == id)
         {

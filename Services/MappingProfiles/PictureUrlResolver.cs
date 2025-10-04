@@ -1,4 +1,5 @@
 ﻿global using Microsoft.Extensions.Configuration;
+using Shared.Dtos;
 
 namespace Services.MappingProfiles
 {

@@ -1,4 +1,4 @@
-﻿namespace Shared
+﻿namespace Shared.Dtos
 {
     public class BrandResultDto
     {
