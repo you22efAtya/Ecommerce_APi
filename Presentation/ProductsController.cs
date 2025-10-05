@@ -12,10 +12,10 @@ namespace Presentation
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class ProductController(IServiceManager _serviceManager) : ControllerBase
+    public class ProductsController(IServiceManager _serviceManager) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedResult<ProductResultDto>>> GetAllProducts([FromQuery]ProductParametersSpecifications parameters)
+        public async Task<ActionResult<PaginatedResult<ProductResultDto>>> GetAllProducts([FromQuery]ProductSpecificationsParameters parameters)
         {
             var products = await _serviceManager.ProductService.GetAllProductsAsync(parameters);
             return Ok(products);

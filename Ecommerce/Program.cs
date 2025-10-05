@@ -1,5 +1,8 @@
 
 using Domain.Contracts;
+using Ecommerce.Factories;
+using Ecommerce.Middlewares;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistance.Data;
@@ -31,9 +34,16 @@ namespace Ecommerce
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDbIntializer, DpIntializer>();
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrorResponse;
+            }
+
+            );
 
 
             var app = builder.Build();
+            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
             await IntializeDbAsync(app);
 
             // Configure the HTTP request pipeline.

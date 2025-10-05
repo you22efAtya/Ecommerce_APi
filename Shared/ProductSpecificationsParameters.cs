@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared
 {
-    public class ProductParametersSpecifications
+    public class ProductSpecificationsParameters
     {
         public int? TypeId { get; set; }
         public int? BrandId { get; set; }
@@ -20,6 +20,7 @@ namespace Shared
             get => _pageSize;
             set => _pageSize = (value > maxPageSize) ? maxPageSize : value;
         }
+        public string? Search { get; set; }
     }
     public enum ProductSort
     {

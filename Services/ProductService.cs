@@ -3,6 +3,7 @@ global using Domain.Contracts;
 global using Domain.Entities;
 global using Services.Abstraction;
 global using Shared;
+using Domain.Exceptions;
 using Services.Specifications;
 using Shared.Dtos;
 
@@ -17,7 +18,7 @@ namespace Services
            return _mapper.Map<IEnumerable<BrandResultDto>>(brands);
         }
 
-        public async Task<PaginatedResult<ProductResultDto>> GetAllProductsAsync(ProductParametersSpecifications parameters)
+        public async Task<PaginatedResult<ProductResultDto>> GetAllProductsAsync(ProductSpecificationsParameters parameters)
         {
             var products =  await _unitOfWork.GetRepository<Product,int>().GetAllAsync(new ProductWithBrandAndTypeSpecifications(parameters));
             var totalCount = await _unitOfWork.GetRepository<Product,int>().CountAsync(new ProductCountSpecifications(parameters));
@@ -40,7 +41,7 @@ namespace Services
         public async Task<ProductResultDto> GetProductByIdAsync(int id)
         {
             var product =  await _unitOfWork.GetRepository<Product,int>().GetByIdAsync(new ProductWithBrandAndTypeSpecifications(id));
-            return _mapper.Map<ProductResultDto>(product);
+            return product is null ? throw new ProductNotFoundException(id) : _mapper.Map<ProductResultDto>(product);
         }
     }
 }
