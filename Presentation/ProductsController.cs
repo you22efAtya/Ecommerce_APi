@@ -2,9 +2,11 @@
 using Services.Abstraction;
 using Shared;
 using Shared.Dtos;
+using Shared.ErrorModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +35,10 @@ namespace Presentation
             var types = await _serviceManager.ProductService.GetAllTypesAsync();
             return Ok(types);
         }
+        [ProducesResponseType(typeof(ErrorDetails),(int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProductResultDto), (int)HttpStatusCode.OK)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResultDto>> GetProductById(int id)
         {
