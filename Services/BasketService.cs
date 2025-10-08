@@ -1,4 +1,5 @@
 ﻿using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Shared.Dtos;
 
 namespace Services

@@ -25,7 +25,7 @@ namespace Ecommerce
 
             builder.Services.AddPresentationServices();
 
-            builder.Services.AddCoreServices();
+            builder.Services.AddCoreServices(builder.Configuration);
 
             builder.Services.AddInfrastructureServics(builder.Configuration);
             
@@ -46,7 +46,7 @@ namespace Ecommerce
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseStaticFiles();

@@ -4,11 +4,13 @@ global using Domain.Entities;
 global using Services.Abstraction;
 global using Shared;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Services.Specifications;
 using Shared.Dtos;
 
 namespace Services
 {
+    
     public class ProductService(IUnitOfWork _unitOfWork,IMapper _mapper) : IProductService
     {
        

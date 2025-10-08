@@ -10,6 +10,7 @@ namespace Ecommerce.Extenstions
             using var scope = app.Services.CreateScope();
             var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbIntializer>();
             await dbInitializer.InitializeAsync();
+            await dbInitializer.InitializeIdentityAsync();
             return app;
         }
         public static WebApplication UseCustomeMiddlewares(this WebApplication app)

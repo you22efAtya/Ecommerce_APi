@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction;
 using Shared;
 using Shared.Dtos;
@@ -12,9 +13,8 @@ using System.Threading.Tasks;
 
 namespace Presentation
 {
-    [ApiController]
-    [Route("/api/[controller]")]
-    public class ProductsController(IServiceManager _serviceManager) : ControllerBase
+    [Authorize]
+    public class ProductsController(IServiceManager _serviceManager) : ApiController
     {
         [HttpGet]
         public async Task<ActionResult<PaginatedResult<ProductResultDto>>> GetAllProducts([FromQuery]ProductSpecificationsParameters parameters)
@@ -35,9 +35,7 @@ namespace Presentation
             var types = await _serviceManager.ProductService.GetAllTypesAsync();
             return Ok(types);
         }
-        [ProducesResponseType(typeof(ErrorDetails),(int) HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.InternalServerError)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        
         [ProducesResponseType(typeof(ProductResultDto), (int)HttpStatusCode.OK)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResultDto>> GetProductById(int id)
