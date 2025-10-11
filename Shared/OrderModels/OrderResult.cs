@@ -16,5 +16,6 @@ namespace Shared.OrderModels
         public decimal Subtotal { get; init; }
         public DateTimeOffset OrderDate { get; init; } = DateTimeOffset.Now;
         public string PaymentIntentId { get; init; } = string.Empty;
+        public decimal Total { get; init; }
     }
 }

@@ -9,7 +9,7 @@ namespace Services
 {
     public interface IOrderService
     {
-        Task<OrderResult> GetOrderByIdAsync(int id);
+        Task<OrderResult> GetOrderByIdAsync(Guid id);
         Task<IEnumerable<OrderResult>> GetAllOrdersByEmailAsync(string userEmail);
         Task<OrderResult> CreateOrderAsync(OrderRequest request, string userEmail);
         Task<IEnumerable<DelivaryMethodResult>> GetDelivaryMethodAsync();
