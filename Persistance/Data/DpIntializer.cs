@@ -1,8 +1,9 @@
 ﻿
+using Domain.Entities.OrderEntity;
 using Microsoft.AspNetCore.Identity;
 using System.Text.Json;
 
-namespace Persistance.Data.DataSeeding
+namespace Persistance.Data
 {
     public class DpIntializer : IDbIntializer
     {
@@ -56,7 +57,18 @@ namespace Persistance.Data.DataSeeding
                             await _dbContext.SaveChangesAsync();
                         }
                     }
-                }
+                    if (!_dbContext.DeliveryMethods.Any())
+                    {
+                    //E:\Routes\APIs\Ecommerce\EcommerceSolution\Persistance\Data\DataSeeding\
+                    var methodsData = await File.ReadAllTextAsync(@"../Persistance/Data/DataSeeding/delivery.json");
+                        var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(methodsData);
+                        if (methods is not null && methods.Any())
+                        {
+                            await _dbContext.AddRangeAsync(methods);
+                            await _dbContext.SaveChangesAsync();
+                        }
+                    }
+            }
             }
             catch (Exception ex)
             {

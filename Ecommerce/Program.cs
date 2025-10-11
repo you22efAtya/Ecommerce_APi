@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistance.Data;
-using Persistance.Data.DataSeeding;
 using Persistance.Repositories;
 using Services;
 using Services.Abstraction;

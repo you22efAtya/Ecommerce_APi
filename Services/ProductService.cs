@@ -4,6 +4,7 @@ global using Domain.Entities;
 global using Services.Abstraction;
 global using Shared;
 using Domain.Exceptions;
+using Domain.Exceptions.NotFoundExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Services.Specifications;
 using Shared.Dtos;

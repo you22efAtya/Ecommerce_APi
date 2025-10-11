@@ -1,7 +1,6 @@
 ﻿using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
-using Persistance.Data.DataSeeding;
 using Persistance.Repositories;
 using StackExchange.Redis;
 using Persistance.Identity;

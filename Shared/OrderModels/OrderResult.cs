@@ -8,6 +8,7 @@ namespace Shared.OrderModels
 {
     public record OrderResult
     {
+        public Guid Id { get; set; }
         public string UserEmail { get; init; }
         public AddressDto ShippingAddress { get; init; }
         public ICollection<OrderItemDto> OrderItems { get; init; } = new List<OrderItemDto>();

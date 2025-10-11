@@ -1,5 +1,5 @@
 ﻿using Domain.Contracts;
-using Persistance.Data.DataSeeding;
+using Persistance.Data;
 using Persistance.Repositories;
 using Services;
 using Services.Abstraction;
