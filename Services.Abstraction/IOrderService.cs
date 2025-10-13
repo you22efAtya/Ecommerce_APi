@@ -12,7 +12,7 @@ namespace Services
         Task<OrderResult> GetOrderByIdAsync(Guid id);
         Task<IEnumerable<OrderResult>> GetAllOrdersByEmailAsync(string userEmail);
         Task<OrderResult> CreateOrderAsync(OrderRequest request, string userEmail);
-        Task<IEnumerable<DelivaryMethodResult>> GetDelivaryMethodAsync();
+        Task<IEnumerable<DeliveryMethodResult>> GetDelivaryMethodAsync();
 
 
     }

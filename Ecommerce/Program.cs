@@ -49,6 +49,7 @@ namespace Ecommerce
             app.UseAuthorization();
 
             app.UseStaticFiles();
+            app.UseCors("CorsPolicy");
             app.MapControllers();
 
             app.Run();

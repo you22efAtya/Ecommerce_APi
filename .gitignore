@@ -361,3 +361,23 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# JSON Config files
+appsettings.json
+appsettings.*.json
+
+# Environment-specific configs
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+
+# User-specific files
+*.user.json
+*.user.config
+
+# Azure Functions local settings
+local.settings.json
+
+# But preserve templates
+!appsettings.example.json
+!appsettings.template.json

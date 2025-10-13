@@ -15,7 +15,7 @@ namespace Services
     {
         public async Task<OrderResult> CreateOrderAsync(OrderRequest request, string userEmail)
         {
-            var shippingAddress = _mapper.Map<ShippingAddress>(request.ShippingAddress);
+            var shippingAddress = _mapper.Map<ShippingAddress>(request.shipToAddress);
             var basket = await _basketRepository.GetBasketAsync(request.BasketId) ?? throw new BasketNotFoundException(request.BasketId);
             var orderItems = new List<OrderItem>();
             foreach (var item in basket.Items)
@@ -25,10 +25,16 @@ namespace Services
                 orderItems.Add(createOrderItem(item, product));
             }
             var delivaryMethod = await _unitOfWork.GetRepository<DeliveryMethod,int>()
-                .GetByIdAsync(request.DelivaryMethodId) ?? throw new DelivaryMethodNotFoundException(request.DelivaryMethodId);
+                .GetByIdAsync(request.DeliveryMethodId) ?? throw new DelivaryMethodNotFoundException(request.DeliveryMethodId);
+            var orderRepo = _unitOfWork.GetRepository<Order, Guid>();
+            var existingOrder = await orderRepo.GetByIdAsync(new OrderWithPaymentIntentIdSpecifications(basket.PaymentIntentId));
+            if(existingOrder != null)
+            {
+                orderRepo.Delete(existingOrder);
+            }
             var subTotal = orderItems.Sum(item => item.Price * item.Quantity);
-            var order = new Order(userEmail,shippingAddress,orderItems, delivaryMethod, subTotal);
-            await _unitOfWork.GetRepository<Order,Guid>().AddAsync(order);
+            var order = new Order(userEmail,shippingAddress,orderItems, delivaryMethod, subTotal, basket.PaymentIntentId);
+            await orderRepo.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<OrderResult>(order);
         }
@@ -43,10 +49,10 @@ namespace Services
             return _mapper.Map<IEnumerable<OrderResult>>(orders);
         }
 
-        public async Task<IEnumerable<DelivaryMethodResult>> GetDelivaryMethodAsync()
+        public async Task<IEnumerable<DeliveryMethodResult>> GetDelivaryMethodAsync()
         {
             var method = await _unitOfWork.GetRepository<DeliveryMethod, int>().GetAllAsync();
-            return _mapper.Map<IEnumerable<DelivaryMethodResult>>(method);
+            return _mapper.Map<IEnumerable<DeliveryMethodResult>>(method);
         }
 
         public async Task<OrderResult> GetOrderByIdAsync(Guid id)

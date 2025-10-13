@@ -11,8 +11,9 @@ namespace Services.MappingProfiles
     {
         public BasketProfile() 
         {
-            CreateMap<CustomerBasket, BasketDto>().ReverseMap();
-            CreateMap<BasketItem, BasketItemDto>().ReverseMap();
+            CreateMap<CustomerBasket, BasketDto>().ForMember(d => d.DeliveryMethodId, options => options.MapFrom(s => s.DelivaryMethodId)).ReverseMap();
+            CreateMap<BasketItem, BasketItemDto>().ForMember(d => d.ProductName, options => options.MapFrom(s => s.Name)).ReverseMap();
+
         }
     }
 }
