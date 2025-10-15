@@ -36,6 +36,7 @@ namespace Ecommerce.Extenstions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbIntializer, DpIntializer>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ICacheRepository, CacheRepository>();
             services.AddSingleton<IConnectionMultiplexer>(services => ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!));
             services.ConfigureJwt(configuration);
             return services;

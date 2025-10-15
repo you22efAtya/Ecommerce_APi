@@ -1,5 +1,6 @@
 ﻿using Domain.Entities.OrderEntity;
 using Domain.Exceptions.NotFoundExceptions;
+using Services.Specifications;
 using Shared.Dtos;
 using Stripe;
 using System;
@@ -8,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Product = Domain.Entities.Product;
+using Order = Domain.Entities.OrderEntity.Order;
+
 
 namespace Services
 {
@@ -54,6 +57,47 @@ namespace Services
             }
             await basketRepository.UpdateBasket(basket);
             return mapper.Map<BasketDto>(basket);
+        }
+
+        public async Task UpdateOrderPaymentStatus(string request, string header)
+        {
+           
+                var endPointSecret = configuration.GetSection("StripeSettings")["EndPointSecret"];
+                var stripeEvent = EventUtility.ConstructEvent(request, header
+                    , endPointSecret, throwOnApiVersionMismatch: false);
+                
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+            switch (stripeEvent.Type)
+            {
+                case EventTypes.PaymentIntentSucceeded:
+                {
+                        await UpdatePaymentSuccesseded(paymentIntent!.Id);
+                        break;
+                }
+                case EventTypes.PaymentIntentPaymentFailed:
+                {
+                        await UpdatePaymentFailed(paymentIntent!.Id);
+                        break;
+                }
+            }
+        }
+
+        private async Task UpdatePaymentFailed(string paymentIntentId)
+        {
+            var orderRepo = unitOfWork.GetRepository<Order, Guid>();
+            var order = await orderRepo.GetByIdAsync(new OrderWithPaymentIntentIdSpecifications(paymentIntentId)) ?? throw new Exception();
+            order.OrderPaymnetStatus = OrderPaymnetStatus.PaymentFailed;
+            orderRepo.Update(order);
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task UpdatePaymentSuccesseded(string paymentIntentId)
+        {
+            var orderRepo = unitOfWork.GetRepository<Order, Guid>();
+            var order = await orderRepo.GetByIdAsync(new OrderWithPaymentIntentIdSpecifications(paymentIntentId)) ?? throw new Exception();
+            order.OrderPaymnetStatus = OrderPaymnetStatus.PaymentRecived;
+            orderRepo.Update(order);
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }
